@@ -4,7 +4,8 @@ import './button.scss';
 
 function Button({
   children,
-  className,
+  className = '',
+  type = "button",
   onClick = () => {},
   disabled = false,
   ...attrs
@@ -15,9 +16,10 @@ function Button({
 
   return (
     <Tag
-      className="button"
+      className={`button ${className}`}
       onClick={handleClick}
       disabled={disabled}
+      type={type}
       to={attrs.href}
       {...attrs}
     >
