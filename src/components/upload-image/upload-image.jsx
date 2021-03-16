@@ -91,7 +91,7 @@ function UploadImage({
       <div className="upload-image__content">
         <div className="upload-image__preview-container">
           {previews.map(({ name, result }) => (
-            <div className="upload-image__preview">
+            <div key={name} className="upload-image__preview">
               <div className="upload-image__preview-controls">
                 <Button
                   className="upload-image__preview-edit"
@@ -106,7 +106,7 @@ function UploadImage({
                   X
                 </Button>
               </div>
-              <img key={name} src={result} className="upload-image__preview-image" alt="" />
+              <img src={result} className="upload-image__preview-image" alt="" />
               <span className="upload-image__preview-name">{name}</span>
             </div>
           ))}
