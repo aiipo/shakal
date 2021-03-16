@@ -5,14 +5,22 @@
   flex-flow: column;
   height: 100%;
 
-  &__select-button {
+  &__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+
+  &__select-container {
     margin: 20px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+
+  &__select-button {
     position: relative;
     cursor: pointer;
-
-    & > * {
-      cursor: pointer;
-    }
   }
 
   &__select-files {

@@ -30,7 +30,7 @@ function UploadImage({
   const handleChange = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const { files } = selectRef.current;
+    const { files } = event.dataTransfer || selectRef.current;
     for (const file of files) {
       if (file.type.startsWith('image/') && !previews.find(el => el.name === file.name)) {
         const reader = new FileReader();
@@ -60,8 +60,19 @@ function UploadImage({
     }
   };
 
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
   return (
-    <form className="upload-image wrapper" name="upload-image" onSubmit={handleSubmit}>
+    <form
+      className="upload-image wrapper"
+      name="upload-image"
+      onSubmit={handleSubmit}
+      onDrop={handleChange}
+      onDragOver={handleDragOver}
+    >
       <div className="upload-image__controls">
         {editingImage && (
           <Button
@@ -71,17 +82,20 @@ function UploadImage({
             Сохранить
           </Button>
         )}
-        <Button className="upload-image__select-button" onClick={handleClick}>
-          Выберете фотографии
-          <input
-            ref={selectRef}
-            className="hide"
-            type="file"
-            multiple
-            accept="image/jpeg"
-            onChange={handleChange}
-          />
-        </Button>
+        <div className="upload-image__select-container">
+          <Button className="upload-image__select-button" onClick={handleClick}>
+            Выбрать фотографии
+            <input
+              ref={selectRef}
+              className="hide"
+              type="file"
+              multiple
+              accept="image/jpeg"
+              onChange={handleChange}
+            />
+          </Button>
+          <span>Или перетащите сюда файлы</span>
+        </div>
         {previews.length > 0 && (
           <Button type="submit" className="upload-image__send-button">
             Отправить &#8594;
