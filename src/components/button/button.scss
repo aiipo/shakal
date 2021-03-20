@@ -1,18 +1,27 @@
 .button {
   padding: 10px 16px;
-  border: 1px solid var(--text);
+  border: 1px solid var(--light);
   border-radius: var(--border-radius);
   background: transparent;
   cursor: pointer;
   font-size: 1.6rem;
   user-select: none;
   transition: color 200ms ease-out, border-color 200ms ease-out;
+  color: white;
+  background-color: #42414e;
+  outline: none;
 
-  &:hover,
-  &:focus {
+  &:hover {
     color: var(--text-accent);
     border-color: currentColor;
     outline: none;
+  }
+
+  &:active {
+    color: var(--light);
+    border-color: #00b4a4;
+    outline: none;
+    background-color: #00b4a4;
   }
 
   &[disabled] {
