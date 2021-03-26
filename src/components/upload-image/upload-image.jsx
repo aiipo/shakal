@@ -4,23 +4,26 @@ import Button from '../button/button';
 import ImageEditor from '@toast-ui/react-image-editor';
 import 'tui-image-editor/dist/tui-image-editor.css';
 import './upload-image.scss';
+import ResultPreview from '../result-preview/result-preview';
 
 function UploadImage({
   serverUrl = '',
 }) {
+  const formRef = useRef(null);
   const selectRef = useRef(null);
   const imageEditorRef = useRef(null);
   const [previews, setPreviews] = useState([]);
   const [editingImage, setEditingImage] = useState(null);
+  const [results, setResults] = useState([]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    console.log(serverUrl);
     superagent
       .post(serverUrl)
       .send({ images: previews })
-      .end((err, res) => console.log(err, res));
+      .then(res => setResults(res.body))
+      .catch(err => console.log(err));
   };
 
   const handleClick = () => {
@@ -65,14 +68,18 @@ function UploadImage({
     event.stopPropagation();
   };
 
+  const handleClearResults = () => setResults([]);
+
   return (
     <form
+      ref={formRef}
       className="upload-image wrapper"
       name="upload-image"
       onSubmit={handleSubmit}
       onDrop={handleChange}
       onDragOver={handleDragOver}
     >
+      <ResultPreview elements={results} ref={formRef} clear={handleClearResults} />
       <div className="upload-image__controls">
         {editingImage && (
           <Button
