@@ -1,4 +1,7 @@
 # Shakal
+
+Сервер с нейронкой - https://github.com/Chipsa12/Bodulin-neuron
+
 Project is designed to find a person by providing an image(images) of that person in a database
 
 # Getting Started with Create React App
