@@ -38,8 +38,8 @@ function UploadImage({
       if (file.type.startsWith('image/') && !previews.find(el => el.name === file.name)) {
         const reader = new FileReader();
 
-        reader.addEventListener('load', ({ target: { result }}) => {
-          setPreviews(prevState => [...prevState, { result, name: file.name }]);
+        reader.addEventListener('load', ({ target: { result: image }}) => {
+          setPreviews(prevState => [...prevState, { image, name: file.name }]);
         }, false);
         reader.readAsDataURL(file);
       }
@@ -56,7 +56,7 @@ function UploadImage({
     if (data) {
       setPreviews(prevState => {
         const changedImage = prevState.find(el => el.name === editingImage.name);
-        changedImage.result = data;
+        changedImage.image = data;
         setEditingImage(null);
         return [...prevState.filter(el => el !== editingImage), changedImage];
       });
@@ -111,7 +111,7 @@ function UploadImage({
       </div>
       <div className="upload-image__content">
         <div className="upload-image__preview-container">
-          {previews.map(({ name, result }) => (
+          {previews.map(({ name, image }) => (
             <div key={name} className="upload-image__preview">
               <div className="upload-image__preview-controls">
                 <Button
@@ -127,7 +127,7 @@ function UploadImage({
                   X
                 </Button>
               </div>
-              <img src={result} className="upload-image__preview-image" alt="" />
+              <img src={image} className="upload-image__preview-image" alt="" />
               <span className="upload-image__preview-name">{name}</span>
             </div>
           ))}
@@ -138,7 +138,7 @@ function UploadImage({
               ref={imageEditorRef}
               includeUI={{
                 loadImage: {
-                  path: editingImage.result,
+                  path: editingImage.image,
                   name: editingImage.name,
                 },
                 menu: ['crop', 'flip', 'rotate', 'filter'],
