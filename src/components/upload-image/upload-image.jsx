@@ -39,15 +39,15 @@ function UploadImage({
         const reader = new FileReader();
 
         reader.addEventListener('load', ({ target: { result: image }}) => {
-          setPreviews(prevState => [...prevState, { image, name: file.name }]);
+          setPreviews([...previews, { image, name: file.name }]);
         }, false);
         reader.readAsDataURL(file);
       }
     }
   };
 
-  const handleRemovePreview = (name) => {
-    setPreviews(prevState => prevState.filter(el => el.name !== name));
+  const handleRemovePreview = (preview) => () => {
+    setPreviews(previews.filter(el => el !== preview));
   };
 
   const handleSaveEditingImage = () => {
@@ -55,7 +55,7 @@ function UploadImage({
     const data = imageEditorInst.toDataURL();
     if (data) {
       setPreviews(prevState => {
-        const changedImage = prevState.find(el => el.name === editingImage.name);
+        const changedImage = prevState.find(el => el === editingImage);
         changedImage.image = data;
         setEditingImage(null);
         return [...prevState.filter(el => el !== editingImage), changedImage];
@@ -111,24 +111,24 @@ function UploadImage({
       </div>
       <div className="upload-image__content">
         <div className="upload-image__preview-container">
-          {previews.map(({ name, image }) => (
-            <div key={name} className="upload-image__preview">
+          {previews.map(preview => (
+            <div key={preview.name} className="upload-image__preview">
               <div className="upload-image__preview-controls">
                 <Button
                   className="upload-image__preview-edit"
-                  onClick={() => setEditingImage(previews.find(el => el.name === name))}
+                  onClick={() => setEditingImage(preview)}
                 >
                   Изменить
                 </Button>
                 <Button
                   className="upload-image__preview-remove"
-                  onClick={() => handleRemovePreview(name)}
+                  onClick={handleRemovePreview(preview)}
                 >
                   X
                 </Button>
               </div>
-              <img src={image} className="upload-image__preview-image" alt="" />
-              <span className="upload-image__preview-name">{name}</span>
+              <img src={preview.image} className="upload-image__preview-image" alt="" />
+              <span className="upload-image__preview-name">{preview.name}</span>
             </div>
           ))}
         </div>
