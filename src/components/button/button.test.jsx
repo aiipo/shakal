@@ -24,7 +24,7 @@ describe("<Button/>", () => {
   });
 
   it("className contains property", () => {
-    const prop = jest.fn();
+    const prop = " ";
     render(<Button className={prop} />);
     expect(prop).toBeTruthy();
   });
