@@ -13,40 +13,20 @@ describe("<Button/>", () => {
   it("should contains children", () => {
     const child = "word";
     render(<Button>{child}</Button>);
-    expect(screen.getByText(child)).toBeTruthy();
+    expect(screen.getByText(child)).toBeInTheDocument();
   });
 
   it("disabled contains property", () => {
-    const prop = jest.fn();
-    render(<Button disabled={prop} />);
-    expect(prop).toBeTruthy();
+    const func = jest.fn();
+    render(<Button onClick={func} disabled={true} />);
+    fireEvent.click(screen.getByRole("button"));
+    expect(func).not.toBeCalled();
   });
-
-  //   it("type property", () => {});
 
   it("className contains property", () => {
     const prop = jest.fn();
     render(<Button className={prop} />);
     expect(prop).toBeTruthy();
-  });
-});
-
-describe("Property not null", () => {
-  it("should be have property", () => {
-    const attr = {
-      children: "JS is best",
-      className: "Example",
-      type: "button",
-      onClick: () => {},
-      disabled: true,
-    };
-    expect(attr).toHaveProperty("type", "button");
-  });
-
-  it("children not null", () => {
-    const child = "Word";
-    render(<Button>{child}</Button>);
-    expect(screen.getByText(child)).not.toBeNull();
   });
 
   it("className not null", () => {
@@ -56,20 +36,15 @@ describe("Property not null", () => {
   });
 
   it("type not null", () => {
-    const prop = jest.fn();
+    const prop = "button";
     render(<Button type={prop} />);
     expect(prop).not.toBeNull();
+    expect(prop).toContain("button");
   });
 
-  it("onClick not null", () => {
-    const prop = jest.fn();
-    render(<Button onClick={prop} />);
-    expect(prop).not.toBeNull();
-  });
-
-  it("disabled not null", () => {
-    const prop = jest.fn();
-    render(<Button disabled={prop} />);
-    expect(prop).not.toBeNull();
+  it("should be different types of buttons", () => {
+    expect("submit").toMatch(/submit/);
+    expect("button").toMatch(/button/);
+    expect("reset").toMatch(/reset/);
   });
 });
