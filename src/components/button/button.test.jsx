@@ -10,7 +10,7 @@ describe("<Button/>", () => {
     expect(func).toHaveBeenCalledTimes(1);
   });
 
-  it("should contains children", () => {
+  it("should contains children in the document", () => {
     const child = "word";
     render(<Button>{child}</Button>);
     expect(screen.getByText(child)).toBeInTheDocument();
@@ -24,22 +24,22 @@ describe("<Button/>", () => {
   });
 
   it("className contains property", () => {
-    const prop = " ";
-    render(<Button className={prop} />);
-    expect(prop).toBeTruthy();
+    const className = " ";
+    render(<Button />);
+    expect(className).toBeTruthy();
   });
 
   it("className not null", () => {
-    const prop = jest.fn();
-    render(<Button className={prop} />);
-    expect(prop).not.toBeNull();
+    const className = "word";
+    render(<Button />);
+    expect(className).not.toBeNull();
   });
 
   it("type not null", () => {
-    const prop = "button";
-    render(<Button type={prop} />);
-    expect(prop).not.toBeNull();
-    expect(prop).toContain("button");
+    const type = "button";
+    render(<Button />);
+    expect(type).not.toBeNull();
+    expect(type).toContain("button");
   });
 
   it("should be different types of buttons", () => {
