@@ -32,6 +32,16 @@
   height: 100%;
   // background: var(--bg);
   color: var(--text);
+
+  &__video {
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80vw;
+    max-width: 100%;
+    border-radius: 5px;
+  }
 }
 
 h1 {
