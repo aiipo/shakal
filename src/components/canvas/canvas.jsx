@@ -28,15 +28,15 @@ const Canvas = React.forwardRef((props, ref) => {
 
     if (predictions.length > 0) {
       for (let i = 0; i < predictions.length; i++) {
-        const start = predictions[i].topLeft;
+        const [startX, startY] = predictions[i].topLeft;
         const end = predictions[i].bottomRight;
-        const size = [end[0] - start[0], end[1] - start[1]];
+        const [width, height] = [end[0] - startX, end[1] - startY];
         const context = canvasRef.current.getContext('2d');
 
+        predictedFaces.push(context.getImageData(startX, startY, width, height));
         // Render a rectangle over each detected face.
         context.fillStyle = 'rgb(184,22,22)';
-        context.fillRect(start[0], start[1], size[0], size[1]);
-        predictedFaces.push(context.getImageData(start[0], start[1], size[0], size[1]));
+        context.fillRect(startX, startY, width, height);
       }
     }
     setFaces(getDataFromImageData(predictedFaces));
