@@ -12,21 +12,25 @@ function App() {
   let intervalId;
 
   const onPlay = () => {
-    intervalId = setInterval(() => {
+    intervalId = setInterval(async () => {
       if (canvasRef.current) {
-        superagent
-          .post(`${SERVER_URL}/api/video`)
-          .send({ image: canvasRef.current?.canvasToImage() })
-          .then(res => console.log(res.body))
-          .catch(err => console.log(err));
+        const images = canvasRef.current?.faces;
+
+        if (images?.length) {
+          superagent
+            .post(`${SERVER_URL}/api/video`)
+            .send(images)
+            .then(res => console.log(res.body))
+            .catch(err => console.log(err));
+        }
       }
     }, SENDING_TIMESTAMP);
   };
 
   const onPause = () => clearInterval(intervalId);
 
-  const onTimeUpdate = ({ target: video }) => {
-    canvasRef.current?.drawOnCanvas(video);
+  const onTimeUpdate = async ({ target: video }) => {
+    await canvasRef.current?.drawOnCanvas(video);
   };
 
   return (
@@ -41,7 +45,7 @@ function App() {
           onPause={onPause}
           className='app__video'
         >
-          <source src='https://www.rmp-streaming.com/media/big-buck-bunny-360p.mp4' />
+          <source src='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4' />
         </video>
         <Canvas ref={canvasRef} />
       </div>
