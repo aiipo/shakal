@@ -44,7 +44,6 @@ const Canvas = React.forwardRef((props, ref) => {
 
   const drawOnCanvas = async (image) => {
     if (image) {
-      image.onload = () => console.log('loaded!')
       canvasRef.current
         ?.getContext('2d')
         ?.drawImage(image, 0, 0, canvasRef.current.width, canvasRef.current.height);

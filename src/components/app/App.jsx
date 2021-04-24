@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import superagent from 'superagent';
 import Canvas from '../canvas/canvas';
@@ -8,6 +8,7 @@ import './App.scss';
 
 function App() {
   const canvasRef = useRef(null);
+  const [isDataLoaded, setIsDataLoaded] = useState(true);
   const SENDING_TIMESTAMP = 500;
   let intervalId;
 
@@ -30,8 +31,14 @@ function App() {
   const onPause = () => clearInterval(intervalId);
 
   const onTimeUpdate = async ({ target: video }) => {
-    await canvasRef.current?.drawOnCanvas(video);
+    if (isDataLoaded) {
+      await canvasRef.current?.drawOnCanvas(video);
+    }
   };
+
+  const onWaiting = () => setIsDataLoaded(false);
+
+  const onLoadedData = () => setIsDataLoaded(true);
 
   return (
     <Router>
@@ -42,6 +49,9 @@ function App() {
           crossOrigin='anonymous'
           onTimeUpdate={onTimeUpdate}
           onPlay={onPlay}
+          onWaiting={onWaiting}
+          onSeeking={onWaiting}
+          onLoadedData={onLoadedData}
           onPause={onPause}
           className='app__video'
         >
