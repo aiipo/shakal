@@ -1,8 +1,10 @@
 import React from "react";
 import Button from "./button";
+import { BrowserRouter as Router } from 'react-router-dom';
 import { render, fireEvent, screen } from "@testing-library/react";
 
 describe("<Button/>", () => {
+
   it("should be clicked", () => {
     const func = jest.fn();
     render(<Button onClick={func} />);
@@ -23,21 +25,9 @@ describe("<Button/>", () => {
     expect(func).not.toBeCalled();
   });
 
-  it("className contains property", () => {
-    const className = " ";
-    render(<Button />);
-    expect(className).toBeTruthy();
-  });
-
-  it("className not null", () => {
-    const className = "word";
-    render(<Button />);
-    expect(className).not.toBeNull();
-  });
-
   it("type not null", () => {
     const type = "button";
-    render(<Button />);
+    render(<Button type={type} />);
     expect(type).not.toBeNull();
     expect(type).toContain("button");
   });
@@ -46,5 +36,21 @@ describe("<Button/>", () => {
     expect("submit").toMatch(/submit/);
     expect("button").toMatch(/button/);
     expect("reset").toMatch(/reset/);
+  });
+
+  it("should contains 'word' in className", () => {
+    const className = "word";
+    render(<Button className={className} />);
+    expect(screen.getByRole(className)).not.toBeNull();
+  });
+
+  it("button is a link", () => {
+    const href = "test"
+    const { container } = render(
+      <Router>
+        <Button href={href}  />
+      </Router>
+    );
+    expect(container.firstChild).toHaveAttribute('href');
   });
 });
