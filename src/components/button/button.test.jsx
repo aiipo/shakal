@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "./button";
 import { BrowserRouter as Router } from "react-router-dom";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent, screen, cleanup } from "@testing-library/react";
 
 describe("<Button/>", () => {
   it("should be clicked", () => {
@@ -15,6 +15,21 @@ describe("<Button/>", () => {
     const child = "word";
     render(<Button>{child}</Button>);
     expect(screen.getByText(child)).toBeInTheDocument();
+  });
+
+  it("should set children", () => {
+    const child = "children";
+    render(<Button>{child}</Button>);
+    try {
+      screen.getByText(child);
+    } catch (e) {
+      expect(e.message).toContain(
+        `Unable to find an element with the text: ${child}`
+      );
+    }
+    cleanup();
+    render(<Button>{child}</Button>);
+    expect(screen.getByText(child)).not.toBe(null);
   });
 
   it("disabled contains property", () => {
