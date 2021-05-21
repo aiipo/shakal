@@ -39,13 +39,6 @@ describe("<Button/>", () => {
     expect(func).not.toBeCalled();
   });
 
-  it("type not null", () => {
-    const type = "button";
-    render(<Button type={type} />);
-    expect(type).not.toBeNull();
-    expect(type).toContain("button");
-  });
-
   it("should be different types of buttons", () => {
     expect("submit").toMatch(/submit/);
     expect("button").toMatch(/button/);
@@ -54,8 +47,16 @@ describe("<Button/>", () => {
 
   it("should contains 'word' in className", () => {
     const className = "word";
+    const { container } = render(<Button className={className} />);
+    expect(container.firstChild).toHaveClass(className);
+  });
+
+  it("should be focus", () => {
+    const className = "word";
     render(<Button className={className} />);
-    expect(screen.getByRole(className)).not.toBeNull();
+    expect(screen.getByRole("button")).not.toHaveFocus();
+    screen.getByRole("button").focus();
+    expect(screen.getByRole("button")).toHaveFocus(1);
   });
 
   it("button is a link", () => {
@@ -66,12 +67,5 @@ describe("<Button/>", () => {
       </Router>
     );
     expect(container.firstChild).toHaveAttribute("href");
-  });
-
-  it("the function should be called when the button is clicked passed to onClick", () => {
-    const func = jest.fn();
-    render(<Button onClick={func} />);
-    fireEvent.click(screen.getByRole("button"));
-    expect(func.mock.calls.length).toBe(1);
   });
 });
