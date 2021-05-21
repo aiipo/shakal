@@ -1,10 +1,9 @@
 import React from "react";
 import Button from "./button";
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from "react-router-dom";
 import { render, fireEvent, screen } from "@testing-library/react";
 
 describe("<Button/>", () => {
-
   it("should be clicked", () => {
     const func = jest.fn();
     render(<Button onClick={func} />);
@@ -45,12 +44,19 @@ describe("<Button/>", () => {
   });
 
   it("button is a link", () => {
-    const href = "test"
+    const href = "it";
     const { container } = render(
       <Router>
-        <Button href={href}  />
+        <Button href={href} />
       </Router>
     );
-    expect(container.firstChild).toHaveAttribute('href');
+    expect(container.firstChild).toHaveAttribute("href");
+  });
+
+  it("the function should be called when the button is clicked passed to onClick", () => {
+    const func = jest.fn();
+    render(<Button onClick={func} />);
+    fireEvent.click(screen.getByRole("button"));
+    expect(func.mock.calls.length).toBe(1);
   });
 });
