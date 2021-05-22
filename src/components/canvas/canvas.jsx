@@ -1,8 +1,9 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import '@tensorflow/tfjs';
+import './canvas.scss';
 const blazeface = require('@tensorflow-models/blazeface');
 
-const Canvas = React.forwardRef((props, ref) => {
+const Canvas = React.forwardRef(({ ...attrs }, ref) => {
   const canvasRef = useRef(null);
   const modelRef = useRef(null);
   const [faces, setFaces] = useState([]);
@@ -29,14 +30,16 @@ const Canvas = React.forwardRef((props, ref) => {
     if (predictions.length > 0) {
       for (let i = 0; i < predictions.length; i++) {
         const [startX, startY] = predictions[i].topLeft;
-        const end = predictions[i].bottomRight;
-        const [width, height] = [end[0] - startX, end[1] - startY];
+        const [endX, endY] = predictions[i].bottomRight;
+        const [width, height] = [endX - startX, endY - startY];
         const context = canvasRef.current.getContext('2d');
 
         predictedFaces.push(context.getImageData(startX, startY, width, height));
+
         // Render a rectangle over each detected face.
-        context.fillStyle = 'rgb(184,22,22)';
-        context.fillRect(startX, startY, width, height);
+        context.strokeStyle = 'rgba(184, 22, 22, 0.8)';
+        context.rect(startX, startY, width, height);
+        context.stroke();
       }
     }
     setFaces(getDataFromImageData(predictedFaces));
@@ -44,16 +47,17 @@ const Canvas = React.forwardRef((props, ref) => {
 
   const drawOnCanvas = async (image) => {
     if (image) {
-      canvasRef.current
-        ?.getContext('2d')
-        ?.drawImage(image, 0, 0, canvasRef.current.width, canvasRef.current.height);
+      const { current: canvas } = canvasRef;
+
+      canvas
+        .getContext('2d')
+        ?.drawImage(image, 0, 0, canvas.width, canvas.height);
       await prediction(image);
     }
   };
 
   useEffect(() => {
-    canvasRef.current = document.createElement('canvas');
-    (async () => {
+    (async function loadModel() {
       modelRef.current = await blazeface.load();
     })();
   }, []);
@@ -65,7 +69,7 @@ const Canvas = React.forwardRef((props, ref) => {
     faces,
   }));
 
-  return null;
+  return <canvas className={`canvas ${attrs.className ?? ''}`} ref={canvasRef} />;
 });
 
 export default Canvas;
