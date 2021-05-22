@@ -2,9 +2,9 @@ import React, { useRef, useState } from 'react';
 import superagent from 'superagent';
 import Button from '../button/button';
 import ImageEditor from '@toast-ui/react-image-editor';
+import ResultPreview from '../result-preview/result-preview';
 import 'tui-image-editor/dist/tui-image-editor.css';
 import './upload-image.scss';
-import ResultPreview from '../result-preview/result-preview';
 
 function UploadImage({
   serverUrl = '',

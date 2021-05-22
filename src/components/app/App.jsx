@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import superagent from 'superagent';
 import Canvas from '../canvas/canvas';
@@ -8,18 +8,21 @@ import './App.scss';
 
 function App() {
   const canvasRef = useRef(null);
-  const [isDataLoaded, setIsDataLoaded] = useState(true);
   const SENDING_TIMESTAMP = 500;
   let intervalId;
 
+  const onTimeUpdate = async ({ target: video }) => {
+    await canvasRef.current?.drawOnCanvas(video);
+  };
+
   const onPlay = () => {
-    intervalId = setInterval(async () => {
+    intervalId = setInterval(() => {
       if (canvasRef.current) {
         const images = canvasRef.current?.faces;
 
         if (images?.length) {
           superagent
-            .post(`${SERVER_URL}/api/video`)
+            .post(`${SERVER_URL}/api/images`)
             .send(images)
             .then(res => console.log(res.body))
             .catch(err => console.log(err));
@@ -30,16 +33,6 @@ function App() {
 
   const onPause = () => clearInterval(intervalId);
 
-  const onTimeUpdate = async ({ target: video }) => {
-    if (isDataLoaded) {
-      await canvasRef.current?.drawOnCanvas(video);
-    }
-  };
-
-  const onWaiting = () => setIsDataLoaded(false);
-
-  const onLoadedData = () => setIsDataLoaded(true);
-
   return (
     <Router>
       <div className="app">
@@ -49,15 +42,12 @@ function App() {
           crossOrigin='anonymous'
           onTimeUpdate={onTimeUpdate}
           onPlay={onPlay}
-          onWaiting={onWaiting}
-          onSeeking={onWaiting}
-          onLoadedData={onLoadedData}
           onPause={onPause}
           className='app__video'
         >
           <source src='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4' />
         </video>
-        <Canvas ref={canvasRef} />
+        <Canvas ref={canvasRef} className='app__video' />
       </div>
     </Router>
   );
